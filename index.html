@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A Little Birthday Surprise for My Favorite Person ♡</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== COLORS & FONTS (edit here) ===== */
+:root{
+  --pink:#f7b6cc; --rose:#e87aa0; --cream:#fff8f0; --white:#fff;
+  --lilac:#cdb8f0; --plum:#6b4a7a; --shadow:0 10px 30px rgba(190,120,160,.22);
+  --script:'Dancing Script','Segoe Script',cursive;
+  --serif:'Cormorant Garamond',Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:var(--serif);font-size:1.2rem;color:var(--plum);
+  background:linear-gradient(160deg,#fff0f5,var(--cream) 45%,#f1e8ff);background-attachment:fixed;overflow-x:hidden}
+.screen{min-height:100svh;padding:70px 20px 100px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;z-index:1}
+.hidden{display:none}
+h1,h2{font-family:var(--script);color:var(--rose);line-height:1.15}
+h1{font-size:clamp(2.6rem,10vw,4.8rem)} h2{font-size:clamp(2rem,7vw,3rem);margin-bottom:6px}
+.sub{max-width:34ch;margin:8px auto 22px;font-style:italic}
+.lead{max-width:40ch;margin:0 auto 24px}
+
+/* Buttons */
+.btn{font-family:var(--script);font-size:1.4rem;font-weight:700;color:#fff;border:0;border-radius:50px;padding:12px 30px;cursor:pointer;
+  background:linear-gradient(135deg,var(--rose),#c79cf0);box-shadow:0 0 0 0 rgba(232,122,160,.6),var(--shadow);animation:glow 2.4s infinite;transition:transform .25s}
+.btn:hover{transform:translateY(-3px) scale(1.04)} .btn:active{transform:scale(.96)}
+.btn:focus-visible,.icon-btn:focus-visible{outline:3px solid var(--plum);outline-offset:3px}
+@keyframes glow{50%{box-shadow:0 0 0 12px rgba(232,122,160,0),var(--shadow)}}
+
+/* Background floaters (created by JS) */
+#floaters{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.floater{position:absolute;bottom:-40px;animation:rise linear infinite;opacity:.7}
+@keyframes rise{to{transform:translate(var(--dx),-115vh) rotate(40deg)}}
+
+/* Welcome */
+.big-heart{font-size:4.5rem;animation:beat 1.2s infinite;filter:drop-shadow(0 6px 10px rgba(232,122,160,.5));margin:10px 0 16px}
+@keyframes beat{15%{transform:scale(1.2)}30%{transform:scale(1)}45%{transform:scale(1.15)}}
+.pop>*{opacity:0;animation:pop .9s cubic-bezier(.2,1.4,.4,1) forwards}
+.pop>*:nth-child(2){animation-delay:.3s}.pop>*:nth-child(3){animation-delay:.6s}.pop>*:nth-child(4){animation-delay:.9s}.pop>*:nth-child(5){animation-delay:1.2s}
+@keyframes pop{from{opacity:0;transform:translateY(30px) scale(.9)}to{opacity:1;transform:none}}
+.name{font-family:var(--script);font-size:clamp(2rem,8vw,3.2rem);color:var(--plum)}
+
+/* Envelope */
+.envelope{width:min(300px,80vw);height:200px;position:relative;cursor:pointer;margin:10px auto 0;transition:transform .3s}
+.envelope:hover{transform:rotate(-2deg) scale(1.03)}
+.env-back,.env-front{position:absolute;inset:0;border-radius:12px;box-shadow:var(--shadow)}
+.env-back{background:var(--pink)}
+.env-front{background:linear-gradient(135deg,#fbd0df 50%,transparent 50%),linear-gradient(225deg,#f9c2d6 50%,transparent 50%),#f4a9c4;clip-path:polygon(0 0,50% 55%,100% 0,100% 100%,0 100%)}
+.flap{position:absolute;top:0;left:0;width:100%;height:55%;background:#f08db0;clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .7s;z-index:3;border-radius:12px 12px 0 0}
+.seal{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);font-size:2rem;z-index:4;transition:opacity .3s;animation:beat 1.5s infinite}
+.envelope.open .flap{transform:rotateX(180deg);z-index:0}
+.envelope.open .seal{opacity:0}
+.tap-hint{font-family:var(--script);font-size:1.3rem;margin-top:14px;color:var(--rose)}
+.letter{max-height:0;overflow:hidden;opacity:0;transition:max-height 1.4s ease,opacity 1s ease .3s;width:min(520px,100%)}
+.letter.show{max-height:1400px;opacity:1}
+.paper{background:var(--white);border-radius:22px;padding:26px 24px;margin-top:22px;box-shadow:var(--shadow);text-align:left;line-height:1.6;border:2px dashed var(--pink)}
+.paper p{margin-bottom:12px}.sign{font-family:var(--script);font-size:1.8rem;color:var(--rose);text-align:right}
+
+/* Polaroids */
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:22px;max-width:760px;width:100%;margin-top:20px}
+.polaroid{background:#fff;padding:10px 10px 14px;border-radius:8px;box-shadow:var(--shadow);transition:transform .35s;transform:rotate(var(--r))}
+.polaroid:hover{transform:rotate(0) translateY(-8px) scale(1.04)}
+.frame{aspect-ratio:1;border-radius:6px;overflow:hidden;background:linear-gradient(135deg,var(--pink),var(--lilac));position:relative;display:flex;align-items:center;justify-content:center;font-size:2.4rem;color:#fff}
+.frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.polaroid figcaption{font-family:var(--script);font-size:1.25rem;margin-top:8px;color:var(--rose)}
+
+/* Reasons */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;max-width:760px;width:100%;margin-top:18px}
+.card{min-height:120px;background:#fff;border:0;border-radius:22px;padding:14px;box-shadow:var(--shadow);cursor:pointer;font:inherit;color:inherit;transition:transform .3s,background .5s}
+.card:hover{transform:translateY(-4px)}
+.card .h{font-size:2.2rem;display:block;animation:beat 1.8s infinite}
+.card .t{display:none;font-size:1.05rem;line-height:1.35;animation:pop .6s both}
+.card.on{background:linear-gradient(145deg,#fff,#ffe6ef)}.card.on .h{display:none}.card.on .t{display:block}
+.count{font-family:var(--script);font-size:1.3rem;margin-top:14px}
+
+/* Love section */
+.msg{min-height:3.2em;margin:18px auto;max-width:34ch;font-style:italic;font-size:1.3rem;transition:opacity .4s}
+.secret{background:none;border:0;font-size:1.3rem;cursor:pointer;margin-top:26px;opacity:.55;transition:.3s}
+.secret:hover{opacity:1;transform:scale(1.3)}
+.kiss{position:fixed;font-size:3rem;pointer-events:none;z-index:50;animation:kiss 1.6s ease-out forwards}
+@keyframes kiss{from{transform:translate(-50%,0) scale(.5);opacity:1}to{transform:translate(-50%,-160px) scale(1.8);opacity:0}}
+.tapheart{position:fixed;pointer-events:none;z-index:60;font-size:1.6rem;animation:tap 1.3s ease-out forwards}
+@keyframes tap{from{transform:translate(-50%,-50%) scale(.4);opacity:1}to{transform:translate(-50%,-140px) scale(1.2);opacity:0}}
+
+/* Cake */
+.cake{width:200px;margin:10px auto 6px;position:relative}
+.candles{display:flex;justify-content:center;gap:26px;height:56px;align-items:flex-end}
+.candle{width:12px;height:34px;background:repeating-linear-gradient(45deg,#fff,#fff 6px,var(--pink) 6px,var(--pink) 12px);border-radius:4px;position:relative}
+.flame{position:absolute;left:50%;bottom:100%;width:12px;height:20px;margin-left:-6px;background:radial-gradient(#fff6c8,#ffb347);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;transform-origin:bottom;animation:flicker .3s infinite alternate;box-shadow:0 0 14px #ffd27a}
+@keyframes flicker{to{transform:scale(.88,1.1) rotate(4deg)}}
+.out .flame{display:none}
+.tier{height:46px;border-radius:14px;box-shadow:var(--shadow)}
+.t1{width:140px;margin:0 auto;background:linear-gradient(#fff,#ffd9e6);border-top:8px solid var(--pink)}
+.t2{width:200px;background:linear-gradient(#fff,#e8dcff);border-top:8px solid var(--lilac);margin-top:-4px}
+.confetti{position:fixed;top:-20px;z-index:70;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translate(var(--dx),110vh) rotate(720deg)}}
+.birthday-msg{font-family:var(--script);font-size:2rem;color:var(--rose);margin-top:16px;min-height:2.4em}
+
+/* Final */
+.final-heart{font-size:6rem;animation:beat 1.2s infinite;filter:drop-shadow(0 0 18px rgba(232,122,160,.6))}
+.final p.big{font-family:var(--script);font-size:clamp(1.6rem,6vw,2.3rem);max-width:22ch;margin:12px auto;color:var(--plum)}
+
+/* Music player + navigation */
+.player{position:fixed;top:max(10px,env(safe-area-inset-top));right:10px;z-index:80;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);padding:6px 8px 6px 14px;border-radius:50px;box-shadow:var(--shadow);font-family:var(--script);font-size:1.05rem}
+#songTitle{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px;min-width:0}
+.disc{display:inline-block}.playing .disc{animation:spin 3s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.icon-btn{border:0;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--rose),#c79cf0);color:#fff;font-size:1rem;cursor:pointer}
+.bar{position:fixed;top:0;left:0;height:4px;width:0;background:linear-gradient(90deg,var(--pink),var(--lilac));z-index:90;transition:width .3s}
+.nav{position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:80;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.88);backdrop-filter:blur(8px);padding:6px 12px;border-radius:50px;box-shadow:var(--shadow)}
+.dots{display:flex;gap:7px}.dot{width:9px;height:9px;border-radius:50%;background:var(--pink);border:0;cursor:pointer;transition:.3s;padding:0}
+.dot.active{background:var(--rose);transform:scale(1.5)}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<div class="bar" id="bar"></div>
+<div id="floaters"></div>
+
+<!-- ===== MUSIC PLAYER =====
+     Put your song file named "our-song.mp3" in the SAME folder as this Index.html.
+     To use a different filename, change the src below AND the error message in the JS. -->
+<div class="player" id="player">
+  <span class="disc">💿</span><span id="songTitle">Our song</span>
+  <button class="icon-btn" id="musicBtn" aria-label="Play or pause music">▶</button>
+  <audio id="audio" src="our-song.mp3" loop preload="none"></audio>
+</div>
+
+<!-- 1. WELCOME -->
+<section class="screen" id="s0">
+  <div class="pop">
+    <h1>Happy Birthday, My Love! ♡</h1>
+    <div class="name" id="herName"></div>
+    <div class="big-heart">💗</div>
+    <p class="sub">A little surprise, made just for you.</p>
+    <button class="btn" id="openBtn">Open Your Surprise 💗</button>
+  </div>
+</section>
+
+<!-- 2. ENVELOPE + LETTER -->
+<section class="screen hidden" id="s1">
+  <h2>A Letter For You</h2>
+  <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open the envelope">
+    <div class="env-back"></div><div class="env-front"></div><div class="flap"></div><div class="seal">💌</div>
+  </div>
+  <div class="tap-hint" id="hint">tap the envelope ♡</div>
+  <div class="letter" id="letter"><div class="paper" id="paper"></div></div>
+</section>
+
+<!-- 3. MEMORIES -->
+<section class="screen hidden" id="s2">
+  <h2>Our Memories</h2>
+  <p class="lead" id="favMemory"></p>
+  <div class="gallery" id="gallery"></div>
+</section>
+
+<!-- 4. REASONS -->
+<section class="screen hidden" id="s3">
+  <h2>Reasons I Love You</h2>
+  <p class="lead">Tap a heart to open each one.</p>
+  <div class="cards" id="cards"></div>
+  <div class="count" id="count"></div>
+</section>
+
+<!-- 5. LOVE -->
+<section class="screen hidden" id="s4">
+  <h2>Just For You</h2>
+  <p class="lead">Tap anywhere on the screen to send a little love.</p>
+  <button class="btn" id="kissBtn">Tap for a Kiss 💋</button>
+  <div class="msg" id="kissMsg"></div>
+  <button class="secret" id="secretBtn" aria-label="A tiny secret heart">🤍</button>
+</section>
+
+<!-- 6. CAKE -->
+<section class="screen hidden" id="s5">
+  <h2>Make a Wish</h2>
+  <div class="cake" id="cake">
+    <div class="candles"><div class="candle"><div class="flame"></div></div><div class="candle"><div class="flame"></div></div><div class="candle"><div class="flame"></div></div></div>
+    <div class="tier t1"></div><div class="tier t2"></div>
+  </div>
+  <button class="btn" id="blowBtn">Blow Out the Candles 🎂</button>
+  <div class="birthday-msg" id="bdayMsg"></div>
+</section>
+
+<!-- 7. FINAL -->
+<section class="screen hidden final" id="s6">
+  <div class="final-heart">💖</div>
+  <h2>Forever Yours</h2>
+  <p class="big">No matter how many birthdays pass, I will always be grateful to have you in my life.</p>
+  <p class="big">I love you, always. ♡</p>
+  <button class="btn" id="replayBtn">Celebrate Again 🎉</button>
+</section>
+
+<!-- NAVIGATION -->
+<nav class="nav hidden" id="nav">
+  <button class="icon-btn" id="prev" aria-label="Previous section">‹</button>
+  <div class="dots" id="dots"></div>
+  <button class="icon-btn" id="next" aria-label="Next section">›</button>
+</nav>
+
+<script>
+/* =========================================================
+   ✏️ EDIT THIS SECTION — all your personal details live here
+   ========================================================= */
+const CONFIG = {
+  herName: "Gwyneth Ortega",
+  nickname: "Lovelovee",
+  birthday: "10-23-2009",
+  anniversary: "06-21-2026",
+  favoriteMemory: " is sa Purok 5",
+  songTitle: "Wish List",
+  letter: [
+    "Dear Love,",
+    "Happy birthday, Love. Wish I could be there in person, but I'm still celebrating you from here. You're the best part of my days, and I hope your birthday is full of stuff that makes you smile. I love you and can't wait to see you.",
+    "Thank you for the laughs, the comfort, and the way you make ordinary days feel special. I'm so grateful for you.",
+    "Happy Birthday. I love you more than words can say."
+  ],
+  signature: "Yours always ♡",
+  photos: [
+    { src: "photos/photo1.jpg", caption: "Our first adventure" },
+    { src: "photos/photo2.jpg", caption: "That perfect day" },
+    { src: "photos/photo3.jpg", caption: "Laughing together" },
+    { src: "photos/photo4.jpg", caption: "My favorite smile" },
+    { src: "photos/photo5.jpg", caption: "Us, always" },
+    { src: "photos/photo6.jpg", caption: "Sweet little moment" }
+  ],
+  reasons: [
+    "Your smile makes my whole day better.",
+    "You make me laugh like nobody else can.",
+    "You're kind to everyone you meet.",
+    "You believe in me, even when I doubt myself.",
+    "Being with you feels like home.",
+    "You're beautiful inside and out.",
+    "You make ordinary moments feel magical.",
+    "You are simply, wonderfully you."
+  ],
+  kissMessages: [
+    "Mwah! That one's all yours 💋",
+    "Sending you a million more kisses ♡",
+    "Kisses, hugs, and all my love 💗",
+    "You just got kissed by the luckiest person alive ✨"
+  ],
+  secret: "You found my secret heart 🤍 I fall for you again every single day.",
+  wishMessage: "Happy Birthday! May every wish you make come true 🎉"
+};
+
+/* ---------- Helpers ---------- */
+const $ = id => document.getElementById(id);
+const sections = [...document.querySelectorAll('.screen')];
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+let unlocked = false, current = 0;
+
+/* ---------- Fill in text from CONFIG ---------- */
+$('herName').textContent = CONFIG.herName + " ♡";
+$('songTitle').textContent = CONFIG.songTitle;
+$('favMemory').textContent = CONFIG.favoriteMemory ? "A memory I keep coming back to: " + CONFIG.favoriteMemory : '';
+$('paper').innerHTML = CONFIG.letter.map(t => `<p>${t}</p>`).join('') + `<div class="sign">${CONFIG.signature}</div>`;
+
+/* ---------- Floating background (kept small for phones) ---------- */
+const emojis = ['🌸','💗','✨','🦋','🌷','💜','🤍'];
+for (let i = 0; i < 14; i++) {
+  const f = document.createElement('span');
+  f.className = 'floater';
+  f.textContent = pick(emojis);
+  f.style.cssText = `left:${Math.random()*100}%;font-size:${14+Math.random()*16}px;animation-duration:${14+Math.random()*14}s;animation-delay:-${Math.random()*20}s;--dx:${Math.random()*80-40}px`;
+  $('floaters').appendChild(f);
+}
+
+/* ---------- Navigation ---------- */
+sections.forEach((_, i) => {
+  const d = document.createElement('button');
+  d.className = 'dot'; d.setAttribute('aria-label', 'Go to section ' + (i+1));
+  d.onclick = () => go(i);
+  $('dots').appendChild(d);
+});
+function go(i) {
+  i = Math.max(0, Math.min(sections.length - 1, i));
+  sections[i].scrollIntoView({ behavior: 'smooth' });
+}
+$('prev').onclick = () => go(current - 1);
+$('next').onclick = () => go(current + 1);
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) {
+    current = sections.indexOf(e.target);
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+    $('bar').style.width = ((current + 1) / sections.length * 100) + '%';
+  }});
+}, { threshold: 0.55 });
+sections.forEach(s => io.observe(s));
+
+/* ---------- 1. Open the surprise ---------- */
+$('openBtn').onclick = () => {
+  unlocked = true;
+  sections.forEach(s => s.classList.remove('hidden'));
+  $('nav').classList.remove('hidden');
+  burstHearts(14);
+  setTimeout(() => go(1), 150);
+};
+
+/* ---------- 2. Envelope ---------- */
+function openEnvelope() {
+  $('envelope').classList.add('open');
+  $('hint').style.display = 'none';
+  setTimeout(() => $('letter').classList.add('show'), 500);
+}
+$('envelope').onclick = openEnvelope;
+$('envelope').onkeydown = e => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    openEnvelope();
+  }
+};
+
+/* ---------- 3. Photo gallery ---------- */
+CONFIG.photos.forEach((p, i) => {
+  const fig = document.createElement('figure');
+  fig.className = 'polaroid';
+  fig.style.setProperty('--r', ((i % 2 ? 1 : -1) * (1 + i % 3)) + 'deg');
+  fig.innerHTML = `<div class="frame"><img src="${p.src}" alt="${p.caption}" loading="lazy" onerror="this.remove()">♡</div><figcaption>${p.caption}</figcaption>`;
+  $('gallery').appendChild(fig);
+});
+
+/* ---------- 4. Reasons ---------- */
+let opened = 0;
+const total = CONFIG.reasons.length;
+$('count').textContent = `0 of ${total} opened`;
+CONFIG.reasons.forEach(r => {
+  const c = document.createElement('button');
+  c.className = 'card';
+  c.innerHTML = `<span class="h">💗</span><span class="t">${r}</span>`;
+  c.onclick = () => {
+    if (c.classList.contains('on')) return;
+    c.classList.add('on'); opened++;
+    $('count').textContent = opened === total ? 'That is only the beginning ♡' : `${opened} of ${total} opened`;
+  };
+  $('cards').appendChild(c);
+});
+
+/* ---------- 5. Love section ---------- */
+document.addEventListener('pointerdown', e => {
+  if (!unlocked || e.target.closest('.nav, .player')) return;
+  if (document.querySelectorAll('.tapheart').length > 12) return;
+  const h = document.createElement('span');
+  h.className = 'tapheart'; h.textContent = pick(['💗','💖','💕','🌸']);
+  h.style.left = e.clientX + 'px'; h.style.top = e.clientY + 'px';
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 1300);
+});
+function burstHearts(n) {
+  for (let i = 0; i < n; i++) {
+    const h = document.createElement('span');
+    h.className = 'tapheart'; h.textContent = pick(['💗','💖','💕','✨']);
+    h.style.left = (20 + Math.random() * 60) + 'vw'; h.style.top = (40 + Math.random() * 30) + 'vh';
+    h.style.animationDelay = (Math.random() * .5) + 's';
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 1900);
+  }
+}
+$('kissBtn').onclick = e => {
+  const r = e.target.getBoundingClientRect();
+  const k = document.createElement('span');
+  k.className = 'kiss'; k.textContent = '💋';
+  k.style.left = (r.left + r.width / 2) + 'px'; k.style.top = r.top + 'px';
+  document.body.appendChild(k); setTimeout(() => k.remove(), 1600);
+  $('kissMsg').textContent = pick(CONFIG.kissMessages);
+  burstHearts(6);
+};
+$('secretBtn').onclick = e => {
+  e.target.textContent = '💖';
+  $('kissMsg').textContent = CONFIG.secret;
+  burstHearts(10);
+};
+
+/* ---------- 6. Cake ---------- */
+function confetti(n) {
+  const colors = ['#f7b6cc','#e87aa0','#cdb8f0','#fff3b0','#ffffff'];
+  for (let i = 0; i < n; i++) {
+    const c = document.createElement('span');
+    c.className = 'confetti';
+    if (Math.random() < .3) c.textContent = pick(['💗','✨','🌸']);
+    else { c.style.width = '9px'; c.style.height = '14px'; c.style.background = pick(colors); c.style.borderRadius = '2px'; }
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.setProperty('--dx', (Math.random() * 160 - 80) + 'px');
+    c.style.animationDuration = (2.5 + Math.random() * 2) + 's';
+    c.style.animationDelay = Math.random() * .6 + 's';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 5500);
+  }
+}
+$('blowBtn').onclick = () => {
+  $('cake').classList.add('out');
+  $('bdayMsg').textContent = CONFIG.wishMessage;
+  confetti(60);
+};
+$('replayBtn').onclick = () => {
+  $('cake').classList.remove('out'); $('bdayMsg').textContent = '';
+  confetti(60); burstHearts(10);
+};
+
+/* ---------- Music (never autoplays; starts only when she taps) ---------- */
+const audio = $('audio'), musicBtn = $('musicBtn');
+
+function showAudioError() {
+  musicBtn.textContent = '▶';
+  $('player').classList.remove('playing');
+  $('songTitle').textContent = 'Add our-song.mp3 next to Index.html';
+}
+
+audio.addEventListener('error', showAudioError);
+
+musicBtn.onclick = () => {
+  if (audio.paused) {
+    const p = audio.play();
+    if (p && p.then) {
+      p.then(() => { musicBtn.textContent = '❚❚'; $('player').classList.add('playing'); })
+       .catch(showAudioError);
+    }
+  } else {
+    audio.pause(); musicBtn.textContent = '▶'; $('player').classList.remove('playing');
+  }
+};
+</script>
+</body>
+</html>
